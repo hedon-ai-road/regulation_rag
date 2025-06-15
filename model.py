@@ -27,7 +27,7 @@ class RagLLM(LLM):
         **kwargs: Any
     ) -> str:
         response = self.client.chat.completions.create(
-            model="qwen/qwen-2.5-72b-instruct:free",
+            model="deepseek/deepseek-chat-v3-0324",
             messages=[
                 {"role": "user", "content": prompt},
             ],
@@ -39,7 +39,7 @@ class RagLLM(LLM):
 
     @property
     def _llm_type(self) -> str:
-        return "rag_llm_qwen/qwen-2.5-72b-instruct:free"
+        return "rag_llm_deepseek/deepseek-chat-v3-0324"
     
 
 from langchain_community.embeddings import HuggingFaceEmbeddings
