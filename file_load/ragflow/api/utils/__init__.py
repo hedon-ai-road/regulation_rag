@@ -375,17 +375,3 @@ def decrypt2(crypt_text):
     cipher = Cipher_PKCS1_v1_5.new(rsa_key)
     decrypt_text = cipher.decrypt(decode_data, None)
     return (b64decode(decrypt_text)).decode()
-
-
-def download_img(url):
-    if not url:
-        return ""
-    response = requests.get(url)
-    return "data:" + \
-        response.headers.get('Content-Type', 'image/jpg') + ";" + \
-        "base64," + base64.b64encode(response.content).decode("utf-8")
-
-
-def delta_seconds(date_string: str):
-    dt = datetime.datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S")
-    return (datetime.datetime.now() - dt).total_seconds()

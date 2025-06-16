@@ -71,20 +71,6 @@ def get_rag_directory(*args):
         return os.path.join(RAG_BASE, *args)
     return RAG_BASE
 
-
-def get_rag_python_directory(*args):
-    return get_rag_directory("python", *args)
-
-
-def get_home_cache_dir():
-    dir = os.path.join(os.path.expanduser("~"), ".ragflow")
-    try:
-        os.mkdir(dir)
-    except OSError:
-        pass
-    return dir
-
-
 @cached(cache=LRUCache(maxsize=10))
 def load_json_conf(conf_path):
     if os.path.isabs(conf_path):
@@ -228,14 +214,6 @@ def thumbnail(filename, blob):
         return IMG_BASE64_PREFIX + base64.b64encode(img).decode("utf-8")
     else:
         return ""
-
-
-def traversal_files(base):
-    for root, ds, fs in os.walk(base):
-        for f in fs:
-            fullname = os.path.join(root, f)
-            yield fullname
-
 
 def repair_pdf_with_ghostscript(input_bytes):
     if shutil.which("gs") is None:
