@@ -35,9 +35,7 @@ from pypdf import PdfReader as pdf2_read
 from ragflow.api import settings
 from ragflow.api.utils.file_utils import get_project_base_directory
 from ragflow.deepdoc.vision import OCR, LayoutRecognizer, Recognizer, TableStructureRecognizer
-from ragflow.rag.app.picture import vision_llm_chunk as picture_vision_llm_chunk
 from ragflow.rag.nlp import rag_tokenizer
-from ragflow.rag.prompts import vision_llm_describe_prompt
 from ragflow.rag.settings import PARALLEL_DEVICES
 
 LOCK_KEY_pdfplumber = "global_shared_lock_pdfplumber"
