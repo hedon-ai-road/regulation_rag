@@ -1,49 +1,28 @@
 ragflow:
-  host: 0.0.0.0
+  host: 127.0.0.1
   http_port: 9380
+  task_executor_pool: 12
+
 mysql:
-  name: 'rag_flow'
-  user: 'root'
-  password: 'infini_rag_flow'
-  host: 'mysql'
+  name: "ragflow"
+  host: 127.0.0.1
   port: 3306
-  max_connections: 100
-  stale_timeout: 30
-minio:
-  user: 'rag_flow'
-  password: 'infini_rag_flow'
-  host: 'minio:9000'
-es:
-  hosts: 'http://es01:9200'
-  username: 'elastic'
-  password: 'infini_rag_flow'
+  user: "ragflow"
+  password: "ragflow"
+
 redis:
+  host: 127.0.0.1
+  port: 6379
   db: 1
-  password: 'infini_rag_flow'
-  host: 'redis:6379'
+  password:
+
+minio:
+  host: 127.0.0.1
+  port: 9000
+  user: "minioadmin"
+  password: "minioadmin"
+  secure: False
+
 user_default_llm:
-  factory: 'Tongyi-Qianwen'
-  api_key: 'sk-xxxxxxxxxxxxx'
-  base_url: ''
-oauth:
-  github:
-    client_id: xxxxxxxxxxxxxxxxxxxxxxxxx
-    secret_key: xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    url: https://github.com/login/oauth/access_token
-  feishu:
-    app_id: cli_xxxxxxxxxxxxxxxxxxx
-    app_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    app_access_token_url: https://open.feishu.cn/open-apis/auth/v3/app_access_token/internal
-    user_access_token_url: https://open.feishu.cn/open-apis/authen/v1/oidc/access_token
-    grant_type: 'authorization_code'
-authentication:
-  client:
-    switch: false
-    http_app_key:
-    http_secret_key:
-  site:
-    switch: false
-permission:
-  switch: false
-  component: false
-  dataset: false
+  "chat": "deepseek-chat:deepseek-chat"
+  "embedding": "BAAI/bge-zh-v1.5:huggingface"
