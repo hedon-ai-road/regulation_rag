@@ -16,7 +16,6 @@
 
 from ragflow.rag.nlp import find_codec
 
-
 def get_text(fnm: str, binary=None) -> str:
     txt = ""
     if binary:
