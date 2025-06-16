@@ -1,5 +1,5 @@
 #
-#  Copyright 2024 The InfiniFlow Authors. All Rights Reserved.
+#  Copyright 2025 The InfiniFlow Authors. All Rights Reserved.
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -12,17 +12,13 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+#
 
-NAME_LENGTH_LIMIT = 2 ** 10
-
-IMG_BASE64_PREFIX = 'data:image/png;base64,'
-
+# Service configuration file name
 SERVICE_CONF = "service_conf.yaml"
 
-API_VERSION = "v1"
-RAG_FLOW_SERVICE_NAME = "ragflow"
-REQUEST_WAIT_SEC = 2
-REQUEST_MAX_WAIT_SEC = 300
+# Image base64 prefix for display
+IMG_BASE64_PREFIX = "data:image/jpeg;base64,"
 
-DATASET_NAME_LIMIT = 128
-FILE_NAME_LEN_LIMIT = 256
+# RAGFlow service name
+RAG_FLOW_SERVICE_NAME = "ragflow" 
