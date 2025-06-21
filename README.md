@@ -229,7 +229,7 @@ regulation_rag/
 
 ---
 
-**Help**
+## Help
 
 ### unstructured:PDF text extraction failed, skip text extraction
 
