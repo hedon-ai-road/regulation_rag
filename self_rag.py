@@ -321,10 +321,14 @@ workflow.add_edge("transform_query_rewrite", "retrieve")
 # 构建工作流程
 app = workflow.compile()
 
+# 入参
 query = "那个，我们公司有什么规定来着？"
 inputs = {"keys": {"question": query}}
 
+# 执行 langgraph
 for output in app.stream(inputs):
     for k, v in output.items():
         pass
+
+# 输出最终结果
 print(output['generate']['keys']['generation'])
