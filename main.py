@@ -62,5 +62,68 @@ def run_rag_pipeline(query, context_query, k=3, context_query_type="query",
         print(f"response: \n{response}")
         return response
     
+def query2doc(query):
+    prompt = f"你是一名公司员工制度的问答助手，熟悉公司规章制度，请简短回答以下问题：{query}"
+    doc_info = llm(prompt)
+    context_query = f"{query}, {doc_info}"
+    print("#"*20, 'query2doc')
+    print(context_query)
+    print("#"*20)
+    return context_query
+
+def run_rag_pipeline_basic(query):
+    run_rag_pipeline(query=query, context_query=query)
+
+def run_rag_pipeline_with_query2doc(query):
+    context_query = query2doc(query=query)
+    run_rag_pipeline(query=query, context_query=context_query)
+
 if __name__ == "__main__":
-    run_rag_pipeline("请假有什么规定?", "请假有什么规定?")
+    query = "那个，我们公司有什么规定来着？"
+
+    """
+    根据提供的上下文信息，公司的主要规定包括：  
+
+    1. **企业形象维护**：  
+    - 员工必须严格遵守企业文化、经营理念和管理制度，不得有损学校形象和荣誉的行为。  
+    - 如有违反，情节严重者可能面临警告、处分、解除劳动合同甚至法律追究。  
+
+    2. **考勤制度**：  
+    - 迟到或早退60分钟以上视为缺勤1天。  
+    - 迟到、早退、脱岗累计超过3次（含），每次扣减工资50元。  
+    - 连续旷工超过3天或全年累计旷工超过7天，无条件辞退。  
+
+    3. **学校财产保护**：  
+    - 损坏学校财产需酌情赔偿，盗窃行为将立即解除劳动合同并移交公安部门处理。  
+
+    4. **值班要求**： 
+    - 行政岗及教辅岗需参与法定节假日轮流值班。
+    """
+    # run_rag_pipeline_basic(query=query)
+
+    """
+    根据提供的上下文信息，公司的主要规定包括：
+
+    1. **考勤规定**：
+    - 迟到或早退60分钟以上视同缺勤1天。
+    - 迟到、早退、脱岗累计超过3次（含），每次扣减工资50元。
+    - 缺打卡或无有效签注且无证明的，视为旷工或早退半天。
+    - 无工作理由超过上班时间到岗视为迟到，提前离校视为早退，未经批准中途离校视为旷工。
+
+    2. **旷工情形**：
+    - 未办理请假手续或请假未批准擅自离岗。
+    - 提供虚假证明获得准假。
+    - 迟到、早退或擅离岗位达1小时以上。
+    - 谎报请假原因或伪造证明。
+    - 事假未经批准。
+
+    3. **休假类型**：
+    - 包括事假、病假、婚假、丧假、产假、哺乳假、工伤假、调休。
+
+    4. **其他规定**：
+    - 行政岗及教辅岗需参与法定节假日轮流值班。
+    - 考勤员徇私舞弊或弄虚作假的，按奖惩规定处理，严重者可能解聘。
+
+    如需更详细的规定（如具体休假天数、报销标准等），请咨询HR。
+    """
+    run_rag_pipeline_with_query2doc(query=query)
