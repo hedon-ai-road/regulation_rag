@@ -106,6 +106,7 @@ def sun_question(query):
         1. 子问题1
         2. 子问题2
         3. 子问题3
+        ...
     
     """
 
@@ -117,6 +118,25 @@ def sun_question(query):
     print(sub_queries)
     print("#"*20)
     return sub_queries
+
+def question_rewrite(query):
+    prompt_template = """你是一名公司员工制度的问答助手，熟悉公司规章制度。
+    你的任务是需要为给定的问题，从不同层次生成这个问题的转述版本，使其更易于检索，转述的版本增加一些公司规章制度的关键词。
+    问题：{question}
+    请直接给出转述后的问题列表，不包含其他解释信息，格式为：
+        1. 转述问题1
+        2. 战术问题2
+        3. 转述问题3
+        ..."""
+
+    prompt = PromptTemplate(input_variables=["question"], template=prompt_template)
+
+    llmchain = prompt | llm
+    rewrote_question = llmchain.invoke(query)
+    print("#"*20, 'question_rewrite')
+    print(rewrote_question)
+    print("#"*20)
+    return rewrote_question
 
 def run_rag_pipeline_basic(query):
     run_rag_pipeline(query=query, context_query=query)
@@ -132,6 +152,10 @@ def run_rag_pipeline_with_sub_question(query):
     sub_queries = sun_question(query=query)
     for sq in sub_queries:
         run_rag_pipeline(sq, sq, context_query_type="query")
+
+def run_rag_pipeline_with_question_rewrite(query):
+    run_rag_pipeline(query=query, context_query=question_rewrite(query=query), context_query_type="query")
+
 
 if __name__ == "__main__":
     query = "那个，我们公司有什么规定来着？"
@@ -205,5 +229,8 @@ if __name__ == "__main__":
     """
     # run_rag_pipeline_with_hyde(query=query)
 
-    query = "最近发生了很多事情，有点感冒发烧，还要出差去上海，我可以请什么假？"
-    run_rag_pipeline_with_sub_question(query=query)
+    # query = "最近发生了很多事情，有点感冒发烧，还要出差去上海，我可以请什么假？"
+    # run_rag_pipeline_with_sub_question(query=query)
+
+    query = "我想了解一下，临时外出需要怎么申请？"
+    run_rag_pipeline_with_question_rewrite(query=query)
