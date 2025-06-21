@@ -71,13 +71,6 @@ def query2doc(query):
     print("#"*20)
     return context_query
 
-def run_rag_pipeline_basic(query):
-    run_rag_pipeline(query=query, context_query=query)
-
-def run_rag_pipeline_with_query2doc(query):
-    context_query = query2doc(query=query)
-    run_rag_pipeline(query=query, context_query=context_query)
-
 from langchain.chains.hyde.base import HypotheticalDocumentEmbedder
 
 def hyde(query, include_query=True):
@@ -98,6 +91,13 @@ def hyde(query, include_query=True):
         result = hyde_embedding
     result = list(map(float, result))
     return result
+
+def run_rag_pipeline_basic(query):
+    run_rag_pipeline(query=query, context_query=query)
+
+def run_rag_pipeline_with_query2doc(query):
+    context_query = query2doc(query=query)
+    run_rag_pipeline(query=query, context_query=context_query)
 
 def run_rag_pipeline_with_hyde(query):
     run_rag_pipeline(query=query, context_query=hyde(query=query), context_query_type="vector")
