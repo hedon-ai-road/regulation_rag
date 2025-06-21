@@ -138,6 +138,57 @@ def question_rewrite(query):
     print("#"*20)
     return rewrote_question
 
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts.chat import ChatPromptTemplate
+from langchain_core.prompts.few_shot import FewShotChatMessagePromptTemplate
+
+# 将复杂问题抽象化，使其更聚焦在本质问题上
+def take_step_back(query):
+    examples = [
+        {
+            "input": "我祖父去世了，我要回去几天",
+            "output": "公司丧葬假有什么规定？",
+        },
+        {
+            "input": "我去北京出差，北京的消费高，有什么额外的补助？",
+            "output": "员工出差的交通费、住宿费、伙食补助费的规定是什么？"
+        },
+    ]
+
+    example_prompt = ChatPromptTemplate.from_messages(
+        [
+            ("human", "{input}"),
+            ("ai", "{output}"),
+        ]
+    )
+
+    few_shot_prompt = FewShotChatMessagePromptTemplate(
+        example_prompt=example_prompt,
+        examples=examples,
+    )
+
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """你是一名公司员工制度的问答助手，熟悉公司规章制度。
+                你的任务是将输入的问题通过归纳、提炼，转换为关于公司规章制度制定相关的一般性问题，使得问题更容易捕捉问题的意图。
+                请参考下面的例子，按照同样的风格直接返回一个转述后的问题："""
+            ),
+            # few shot exmaples,
+            few_shot_prompt,
+            # new question
+            ("user", "{question}")
+        ]
+    )
+
+    question_gen = prompt | llm | StrOutputParser()
+    res = question_gen.invoke({"question": query}).removeprefix("AI: ")
+    print("#"*20, 'take_step_back')
+    print(res)
+    print("#"*20)
+    return res
+
 def run_rag_pipeline_basic(query):
     run_rag_pipeline(query=query, context_query=query)
 
@@ -155,6 +206,9 @@ def run_rag_pipeline_with_sub_question(query):
 
 def run_rag_pipeline_with_question_rewrite(query):
     run_rag_pipeline(query=query, context_query=question_rewrite(query=query), context_query_type="query")
+
+def run_rag_pipeline_with_take_step_back(query):
+    run_rag_pipeline(query=query, context_query=take_step_back(query=query), context_query_type="query")
 
 
 if __name__ == "__main__":
@@ -232,5 +286,8 @@ if __name__ == "__main__":
     # query = "最近发生了很多事情，有点感冒发烧，还要出差去上海，我可以请什么假？"
     # run_rag_pipeline_with_sub_question(query=query)
 
-    query = "我想了解一下，临时外出需要怎么申请？"
-    run_rag_pipeline_with_question_rewrite(query=query)
+    # query = "我想了解一下，临时外出需要怎么申请？"
+    # run_rag_pipeline_with_question_rewrite(query=query)
+
+    query = "我有事外出，要怎么办？"
+    run_rag_pipeline_with_take_step_back(query=query)
