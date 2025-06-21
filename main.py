@@ -78,6 +78,30 @@ def run_rag_pipeline_with_query2doc(query):
     context_query = query2doc(query=query)
     run_rag_pipeline(query=query, context_query=context_query)
 
+from langchain.chains.hyde.base import HypotheticalDocumentEmbedder
+
+def hyde(query, include_query=True):
+    prompt_template = """你是一名公司员工制度的问答助手，熟悉公司规章制度，请简短回答以下问题：
+    Question: {question}
+    Answer:"""
+
+    prompt = PromptTemplate(input_variables=["question"], template=prompt_template)
+    embeddings = HypotheticalDocumentEmbedder(llm_chain= prompt | llm,
+                                 base_embeddings=embedding_model.get_embedding_fun())
+    hyde_embedding = embeddings.embed_query(query)
+
+    if include_query:
+        query_embeddings = embedding_model.get_embedding_fun().embed_query(query)
+        result = (np.array(query_embeddings) + np.array(hyde_embedding)) / 2
+        result = list(result)
+    else:
+        result = hyde_embedding
+    result = list(map(float, result))
+    return result
+
+def run_rag_pipeline_with_hyde(query):
+    run_rag_pipeline(query=query, context_query=hyde(query=query), context_query_type="vector")
+
 if __name__ == "__main__":
     query = "那个，我们公司有什么规定来着？"
 
@@ -126,4 +150,26 @@ if __name__ == "__main__":
 
     如需更详细的规定（如具体休假天数、报销标准等），请咨询HR。
     """
-    run_rag_pipeline_with_query2doc(query=query)
+    # run_rag_pipeline_with_query2doc(query=query)
+
+    """
+    根据提供的上下文信息，公司有以下规定：
+
+    1. **考勤规定**：
+    - 工作时间：星期一至星期四 7:55-16:55，星期五 7:55-16:15。
+    - 迟到或早退60分钟以上（含60分钟），每次视同缺勤1天。
+    - 职工迟到、早退、脱岗累计超过3次的（含），从第1次起，每次扣减工资50元。
+    - 无工作理由，超过上班时间到岗的，视为迟到；未到下班时间提前离校的，视为早退；中途未经批准离校，视为旷工。
+
+    2. **休假规定**：
+    - 休假分为以下八种：事假、病假、婚假、丧假、产假、哺乳假、工伤假、调休。
+
+    3. **值班规定**：
+    - 行政岗及教辅岗都需要参与法定节假日轮流值班。
+
+    4. **违规处理**：
+    - 考勤员徇私舞弊、弄虚作假的，按学校奖惩规定处理。情节严重的，予以通报批评直至解聘。
+
+    如果还有其他具体问题，请进一步说明。
+    """
+    run_rag_pipeline_with_hyde(query=query)
