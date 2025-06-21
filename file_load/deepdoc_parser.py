@@ -12,4 +12,6 @@ res = deepdoc_manual.chunk(filename="./file_load/fixtures/zhidu_travel.pdf",
                         callback=dummy)
 for data in res:
     print("="*100)
+    print(data)
+    print("="*100)
     print(data['content_with_weight'])
