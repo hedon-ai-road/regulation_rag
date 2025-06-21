@@ -92,6 +92,32 @@ def hyde(query, include_query=True):
     result = list(map(float, result))
     return result
 
+def sun_question(query):
+    prompt_template = """你是一名公司员工制度的问答助手，熟悉公司规章制度。
+    你的任务是对复杂问题继续拆解，以便理解员工的意图。
+    请根据以下问题创建一个子问题列表：
+    
+    复杂问题：{question}
+
+    请执行以下步骤：
+    1. 识别主要问题：找出问题中的核心概念或主题。
+    2. 分解成子问题：将主要问题分解成可以独立理解和解决的多个子问题。
+    3. 只返回子问题列表，不包含其他解释信息，格式为：
+        1. 子问题1
+        2. 子问题2
+        3. 子问题3
+    
+    """
+
+    prompt = PromptTemplate(input_variables=["question"], template=prompt_template)
+
+    llm_chain = prompt | llm
+    sub_queries = llm_chain.invoke(query).split('\n')
+    print("#"*20, 'sun_question')
+    print(sub_queries)
+    print("#"*20)
+    return sub_queries
+
 def run_rag_pipeline_basic(query):
     run_rag_pipeline(query=query, context_query=query)
 
@@ -101,6 +127,11 @@ def run_rag_pipeline_with_query2doc(query):
 
 def run_rag_pipeline_with_hyde(query):
     run_rag_pipeline(query=query, context_query=hyde(query=query), context_query_type="vector")
+
+def run_rag_pipeline_with_sub_question(query):
+    sub_queries = sun_question(query=query)
+    for sq in sub_queries:
+        run_rag_pipeline(sq, sq, context_query_type="query")
 
 if __name__ == "__main__":
     query = "那个，我们公司有什么规定来着？"
@@ -172,4 +203,7 @@ if __name__ == "__main__":
 
     如果还有其他具体问题，请进一步说明。
     """
-    run_rag_pipeline_with_hyde(query=query)
+    # run_rag_pipeline_with_hyde(query=query)
+
+    query = "最近发生了很多事情，有点感冒发烧，还要出差去上海，我可以请什么假？"
+    run_rag_pipeline_with_sub_question(query=query)
