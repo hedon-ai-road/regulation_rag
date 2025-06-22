@@ -56,4 +56,6 @@ dependencies = [
     "rank-bm25>=0.2.2",
     "jieba>=0.42.1",
     "langgraph>=0.4.8",
+    "pytest>=8.4.1",
+    "deepeval>=3.1.7",
 ]
